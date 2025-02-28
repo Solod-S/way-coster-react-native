@@ -16,6 +16,6 @@
     "app/_layout.js",
     "app/(tabs)/_layout.js",
     "app/(tabs)/login.js",
-    "app/(tabs)/index.js"
+    "app/index.js"
   ]
 }

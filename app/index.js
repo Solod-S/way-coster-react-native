@@ -8,32 +8,46 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Colors } from "@/constants/Colors";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const router = useRouter();
   return (
-    <SafeAreaView edges={["top"]} className="flex-1">
-      <StatusBar style="dark" />
-      <View>
-        <Text
-          className={`${Colors.heading} font-bold`}
-          style={{ fontSize: hp(5) }}
+    <View className="flex-1  flex justify-end ">
+      <StatusBar style="light" />
+      <Image
+        className="w-full h-full absolute"
+        source={require("../assets/images/welcome.jpg")}
+      />
+      <LinearGradient
+        colors={["transparent", "#18181b"]}
+        style={{
+          width: wp(100),
+          height: hp(70),
+          flex: 1,
+          justifyContent: "flex-end",
+          paddingBottom: hp(10),
+        }}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 0.8 }}
+        // className="flex justify-end pb-12 space-y-8"
+      >
+        <Animated.View
+          entering={FadeInDown.delay(100).springify()}
+          className="flex items-center mb-3"
         >
-          Way{" "}
           <Text
-            className="text-green-500 font-bold"
             style={{ fontSize: hp(5) }}
+            className="text-white font-bold tracking-wide"
           >
-            Coster
+            Way <Text className="text-red-500">Coster</Text>
           </Text>
-        </Text>
+        </Animated.View>
+
         <Animated.View entering={FadeIn.delay(200).springify()}>
           <TouchableOpacity
-            onPress={() => router.push("home")}
+            onPress={() => router.replace("home")}
             style={{ height: hp(7), width: wp(80) }}
-            className="bg-green-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
+            className="bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
           >
             <Text
               style={{ fontSize: hp(3) }}
@@ -47,17 +61,17 @@ export default function HomeScreen() {
           <TouchableOpacity
             // onPress={() => router.push("home")}
             style={{ height: hp(7), width: wp(80) }}
-            className="bg-white flex items-center justify-center mx-auto rounded-full border-[2px] border-green-500"
+            className="bg-white flex items-center justify-center mx-auto rounded-full border-[2px] border-red-500"
           >
             <Text
               style={{ fontSize: hp(3) }}
-              className="text-green-500 font-bold tracking-widest"
+              className="text-red-500 font-bold tracking-widest"
             >
               Sign Up
             </Text>
           </TouchableOpacity>
         </Animated.View>
-      </View>
-    </SafeAreaView>
+      </LinearGradient>
+    </View>
   );
 }
