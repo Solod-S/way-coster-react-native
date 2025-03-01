@@ -6,22 +6,24 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BackButton, CustomKeyboardView } from "../../components";
+import { BackButton, CustomKeyboardView } from "../components";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function AddTrip() {
+export default function SignIn() {
   const router = useRouter();
-  const [place, setPlace] = useState();
-  const [country, setCountry] = useState();
-  const handleAddTrip = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = () => {
     try {
-      if (!place || !country) {
+      if (!email || !password) {
         Toast.show({
           type: "info",
           position: "top",
-          // text1: "Failed",
           text2: "Please fill all the fields",
           visibilityTime: 2000,
           autoHide: true,
@@ -29,7 +31,6 @@ export default function AddTrip() {
         });
         return;
       }
-
       router.push("home");
     } catch (error) {
       Toast.show({
@@ -58,13 +59,13 @@ export default function AddTrip() {
                 style={{ fontSize: hp(3) }}
                 className="font-bold text-center text-gray-600"
               >
-                Add Trip
+                Login
               </Text>
             </View>
             <View className="flex-row justify-center my-3 mt-5">
               <Image
                 style={{ width: wp(72), height: wp(72) }}
-                source={require("../../assets/images/addTrip.png")}
+                source={require("../assets/images/login.svg")}
               />
             </View>
             <View className="mx-4 gap-2">
@@ -72,29 +73,47 @@ export default function AddTrip() {
                 style={{ fontSize: hp(2) }}
                 className="font-bold text-gray-600"
               >
-                Where On Earth?
+                Email
               </Text>
               <TextInput
-                value={place}
-                onChangeText={setPlace}
+                value={email}
+                onChangeText={setEmail}
                 className="bg-white rounded-full p-4 mb-3"
               />
               <Text
                 style={{ fontSize: hp(2) }}
                 className="font-bold text-gray-600"
               >
-                Which Country
+                Password
               </Text>
-              <TextInput
-                value={country}
-                onChangeText={setCountry}
-                className="bg-white rounded-full p-4 mb-3"
-              />
+              <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                <TextInput
+                  secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
+                  className="flex-1"
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Ionicons
+                    name={showPassword ? "eye" : "eye-off"}
+                    size={24}
+                    color="gray"
+                  />
+                </TouchableOpacity>
+              </View>
+              <View className="flex-row justify-end">
+                <Text style={{ fontSize: hp(1.5) }} className=" text-gray-600">
+                  Forget Password?
+                </Text>
+              </View>
             </View>
           </View>
+
           <View className="mt-4">
             <TouchableOpacity
-              onPress={handleAddTrip}
+              onPress={handleLogin}
               style={{ height: hp(7), width: wp(80) }}
               className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
             >
@@ -102,7 +121,7 @@ export default function AddTrip() {
                 style={{ fontSize: hp(3) }}
                 className="text-white font-bold tracking-widest"
               >
-                Add Trip
+                Login
               </Text>
             </TouchableOpacity>
           </View>

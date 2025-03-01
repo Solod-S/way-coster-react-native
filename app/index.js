@@ -1,5 +1,5 @@
 import React from "react";
-import { LinearGradient } from "expo-linear-gradient";
+import LottieView from "lottie-react-native";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -8,44 +8,45 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const router = useRouter();
   return (
-    <View className="flex-1  flex justify-end ">
-      <StatusBar style="light" />
-      <Image
-        className="w-full h-full absolute"
-        source={require("../assets/images/welcome.jpg")}
-      />
-      <LinearGradient
-        colors={["transparent", "#18181b"]}
+    <SafeAreaView className="flex-1 justify-between pb-2 items-center">
+      <StatusBar style="dark" />
+      <Animated.View
+        entering={FadeInDown.delay(100).springify()}
         style={{
-          width: wp(100),
-          height: hp(70),
-          flex: 1,
-          justifyContent: "flex-end",
-          paddingBottom: hp(10),
+          height: wp(100),
+          aspectRatio: 1,
         }}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 0.8 }}
-        // className="flex justify-end pb-12 space-y-8"
       >
+        <LottieView
+          style={{ flex: 1 }}
+          source={require("../assets/images/welcome2.json")}
+          autoPlay
+          loop
+          speed={0.6}
+        />
+      </Animated.View>
+
+      <View>
         <Animated.View
-          entering={FadeInDown.delay(100).springify()}
+          entering={FadeInDown.delay(200).springify()}
           className="flex items-center mb-3"
         >
           <Text
             style={{ fontSize: hp(5) }}
-            className="text-white font-bold tracking-wide"
+            className="text-gray-600 font-bold tracking-wide"
           >
             Way <Text className="text-red-500">Coster</Text>
           </Text>
         </Animated.View>
 
-        <Animated.View entering={FadeIn.delay(200).springify()}>
+        <Animated.View entering={FadeIn.delay(300).springify()}>
           <TouchableOpacity
-            onPress={() => router.replace("home")}
+            onPress={() => router.push("signIn")}
             style={{ height: hp(7), width: wp(80) }}
             className="bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
           >
@@ -57,9 +58,9 @@ export default function HomeScreen() {
             </Text>
           </TouchableOpacity>
         </Animated.View>
-        <Animated.View entering={FadeIn.delay(300).springify()}>
+        <Animated.View entering={FadeIn.delay(400).springify()}>
           <TouchableOpacity
-            // onPress={() => router.push("home")}
+            onPress={() => router.push("signUp")}
             style={{ height: hp(7), width: wp(80) }}
             className="bg-white flex items-center justify-center mx-auto rounded-full border-[2px] border-red-500"
           >
@@ -71,7 +72,7 @@ export default function HomeScreen() {
             </Text>
           </TouchableOpacity>
         </Animated.View>
-      </LinearGradient>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }

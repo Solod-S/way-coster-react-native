@@ -31,7 +31,7 @@ const items = [
   },
 ];
 
-export function RecentExpensesList() {
+export function RecentExpensesList({ item }) {
   const router = useRouter();
   return (
     <View className="mx-4 gap-4">
@@ -40,7 +40,7 @@ export function RecentExpensesList() {
           Expenses
         </Text>
         <TouchableOpacity
-          onPress={() => router.push("addTrip")}
+          onPress={() => router.push({ pathname: "/addExpense", params: item })}
           className="p-2 px-3 bg-white border border-gray-200 rounded-full"
         >
           <Text style={{ fontSize: hp(2) }} className="text-gray-600 ">
