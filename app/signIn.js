@@ -11,14 +11,17 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../redux/slices/authSlice";
 
 export default function SignIn() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     try {
       if (!email || !password) {
         Toast.show({
@@ -31,7 +34,7 @@ export default function SignIn() {
         });
         return;
       }
-      router.push("home");
+      dispatch(loginUser({ email, password }));
     } catch (error) {
       Toast.show({
         type: "error",

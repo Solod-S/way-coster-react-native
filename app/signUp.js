@@ -1,9 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import {
   widthPercentageToDP as wp,
@@ -13,11 +10,14 @@ import { BackButton, CustomKeyboardView } from "../components";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { Ionicons } from "@expo/vector-icons"; // Импорт иконок
+import { Ionicons } from "@expo/vector-icons";
+import { registerUser, setIsStatus } from "../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function SignUp() {
-  const insets = useSafeAreaInsets();
+  const { status } = useSelector(state => state.auth);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -50,8 +50,14 @@ export default function SignUp() {
       return;
     }
 
-    router.push("home");
+    dispatch(registerUser({ email, password, fullName: name }));
   };
+  useEffect(() => {
+    if (status === "succeeded") {
+      router.push("emailVerify");
+      dispatch(setIsStatus("idle"));
+    }
+  }, [status]);
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1">

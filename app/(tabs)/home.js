@@ -1,5 +1,4 @@
 import React from "react";
-import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native-virtualized-view";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -11,9 +10,12 @@ import {
 import { Colors } from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/slices/authSlice";
 
 export default function HomeScreen() {
-  const router = useRouter();
+  const dispatch = useDispatch();
+
   return (
     <SafeAreaView edges={["top"]} className="flex-1">
       <ScrollView>
@@ -32,7 +34,7 @@ export default function HomeScreen() {
             </Text>
           </Text>
           <TouchableOpacity
-            // onPress={() => router.push("home")}
+            onPress={() => dispatch(logoutUser())}
             className="p-2 px-3 bg-white border border-gray-200 rounded-full"
           >
             <Text style={{ fontSize: hp(2) }} className="text-gray-600">
