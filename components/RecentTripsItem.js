@@ -5,7 +5,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Image } from "expo-image";
-import { getRandomImage } from "../utils";
+import { images } from "../utils";
 
 export function RecentTripsItem({ item, router }) {
   return (
@@ -16,7 +16,8 @@ export function RecentTripsItem({ item, router }) {
         <Image
           style={{ width: wp(40), height: wp(40) }}
           className="mb-2"
-          source={getRandomImage()}
+          // source={getRandomImage()}
+          source={images[item.imgNumber] || images[1]}
         />
         <Text style={{ fontSize: hp(2) }} className="text-gray-600 font-bold">
           {item.place}

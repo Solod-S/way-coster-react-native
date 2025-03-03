@@ -5,3 +5,4 @@ export { RecentExpenseItem } from "./RecentExpenseItem";
 export { EmptyList } from "./EmptyList";
 export { BackButton } from "./BackButton";
 export { CustomKeyboardView } from "./CustomKeyboardView";
+export { Loading } from "./Loading";

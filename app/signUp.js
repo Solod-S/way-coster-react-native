@@ -6,7 +6,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BackButton, CustomKeyboardView } from "../components";
+import { BackButton, CustomKeyboardView, Loading } from "../components";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
@@ -15,7 +15,7 @@ import { registerUser, setIsStatus } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function SignUp() {
-  const { status } = useSelector(state => state.auth);
+  const { status, isLoading } = useSelector(state => state.auth);
   const router = useRouter();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
@@ -54,9 +54,10 @@ export default function SignUp() {
   };
   useEffect(() => {
     if (status === "succeeded") {
-      router.push("emailVerify");
-      dispatch(setIsStatus("idle"));
+      router.replace("emailVerify");
+      // dispatch(setIsStatus("idle"));
     }
+    return () => dispatch(setIsStatus("idle"));
   }, [status]);
 
   return (
@@ -156,18 +157,27 @@ export default function SignUp() {
             </View>
           </View>
           <View className="mt-4">
-            <TouchableOpacity
-              onPress={handleSignUp}
-              style={{ height: hp(7), width: wp(80) }}
-              className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-            >
-              <Text
-                style={{ fontSize: hp(3) }}
-                className="text-white font-bold tracking-widest"
+            {isLoading ? (
+              <View
+                style={{ height: hp(7), width: wp(80) }}
+                className="w-full shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
               >
-                Sign Up
-              </Text>
-            </TouchableOpacity>
+                <Loading color="white" size={hp(3)} />
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={handleSignUp}
+                style={{ height: hp(7), width: wp(80) }}
+                className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
+              >
+                <Text
+                  style={{ fontSize: hp(3) }}
+                  className="text-white font-bold tracking-widest"
+                >
+                  Sign Up
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </CustomKeyboardView>

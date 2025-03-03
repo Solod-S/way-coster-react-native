@@ -6,17 +6,19 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BackButton, CustomKeyboardView } from "../components";
+import { BackButton, CustomKeyboardView, Loading } from "../components";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+
 import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/slices/authSlice";
+import { useRouter } from "expo-router";
 
 export default function SignIn() {
-  const dispatch = useDispatch();
   const router = useRouter();
+  const { isLoading } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -107,26 +109,42 @@ export default function SignIn() {
                 </TouchableOpacity>
               </View>
               <View className="flex-row justify-end">
-                <Text style={{ fontSize: hp(1.5) }} className=" text-gray-600">
-                  Forget Password?
-                </Text>
+                <TouchableOpacity
+                  onPress={() => router.push("restorePassword")}
+                >
+                  <Text
+                    style={{ fontSize: hp(1.5) }}
+                    className=" text-gray-600"
+                  >
+                    Forget Password?
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
 
           <View className="mt-4">
-            <TouchableOpacity
-              onPress={handleLogin}
-              style={{ height: hp(7), width: wp(80) }}
-              className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-            >
-              <Text
-                style={{ fontSize: hp(3) }}
-                className="text-white font-bold tracking-widest"
+            {isLoading ? (
+              <View
+                style={{ height: hp(7), width: wp(80) }}
+                className="w-full shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
               >
-                Login
-              </Text>
-            </TouchableOpacity>
+                <Loading color="white" size={hp(3)} />
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={handleLogin}
+                style={{ height: hp(7), width: wp(80) }}
+                className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
+              >
+                <Text
+                  style={{ fontSize: hp(3) }}
+                  className="text-white font-bold tracking-widest"
+                >
+                  Login
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </CustomKeyboardView>

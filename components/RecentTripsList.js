@@ -1,50 +1,46 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { getRandomImage } from "../utils";
 import { EmptyList } from "./EmptyList";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { RecentTripsItem } from "./RecentTripsItem";
-
-const items = [
-  {
-    id: 1,
-    place: "Gujrat",
-    country: "Pakistan",
-  },
-  {
-    id: 2,
-    place: "London Eye",
-    country: "England",
-  },
-  {
-    id: 3,
-    place: "Washington dc",
-    country: "America",
-  },
-  {
-    id: 4,
-    place: "New york",
-    country: "America",
-  },
-  {
-    id: 5,
-    place: "New york",
-    country: "America",
-  },
-  {
-    id: 6,
-    place: "New york",
-    country: "America",
-  },
-];
+import { tripsFirebaseServices } from "../services";
+import { useSelector } from "react-redux";
+import { Loading } from "./Loading";
 
 export function RecentTripsList() {
+  const [trips, seTrips] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useSelector(state => state.auth);
   const router = useRouter();
+
+  const fetchTrips = async () => {
+    try {
+      setIsLoading(true);
+      if (user.uid) {
+        const { success, trips } = await tripsFirebaseServices.getUserTrips(
+          user.uid
+        );
+
+        if (success) seTrips(trips);
+      }
+    } catch (error) {
+      console.log(`Error in fetchTrips: `, error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTrips();
+      return () => {};
+    }, [])
+  );
   return (
     <View className="mx-4 gap-4">
       <View className=" flex-row justify-between items-center">
@@ -61,17 +57,23 @@ export function RecentTripsList() {
         </TouchableOpacity>
       </View>
       <View>
-        <FlatList
-          data={items}
-          numColumns={2}
-          ListEmptyComponent={<EmptyList message={"No trips recorded yet."} />}
-          keyExtractor={item => item.id}
-          columnWrapperStyle={{ justifyContent: "space-between" }}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => {
-            return <RecentTripsItem item={item} router={router} />;
-          }}
-        />
+        {isLoading ? (
+          <Loading color="red" size={hp(33)} />
+        ) : (
+          <FlatList
+            data={trips}
+            numColumns={2}
+            ListEmptyComponent={
+              <EmptyList message={"No trips recorded yet."} />
+            }
+            keyExtractor={item => item.id}
+            columnWrapperStyle={{ justifyContent: "space-between" }}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              return <RecentTripsItem item={item} router={router} />;
+            }}
+          />
+        )}
       </View>
     </View>
   );

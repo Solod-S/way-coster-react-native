@@ -1,4 +1,4 @@
-const images = {
+export const images = {
   1: require("../assets/images/1.png"),
   2: require("../assets/images/2.png"),
   3: require("../assets/images/3.png"),
@@ -18,4 +18,12 @@ export function getRandomImage() {
   let max = 12;
   let random = Math.floor(Math.random() * (max - min + 1)) + min;
   return images[random];
+}
+
+export function getRandomImageNumber() {
+  let min = 1;
+  let max = 12;
+  let random = Math.floor(Math.random() * (max - min + 1)) + min;
+
+  return random;
 }

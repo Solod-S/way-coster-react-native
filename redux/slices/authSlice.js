@@ -6,6 +6,7 @@ import {
   signOut,
   sendEmailVerification,
   updateProfile,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, db } from "../../config/fireBaseConfig";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -36,12 +37,66 @@ export const registerUser = createAsyncThunk(
         userId: uid,
       });
 
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Success",
+        text2: "Account activation email sent",
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 50,
+      });
+
       return;
     } catch (error) {
       console.log(`Error in registerUser:`, error);
       let msg = error.message;
       if (msg.includes("invalid-email")) msg = "Invalid email";
       if (msg.includes("email-already-in-use")) msg = "Email already in use";
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Failed",
+        text2: msg
+          .replace("FirebaseError: ", "")
+          .replace("Firebase: ", "")
+          .replace("auth/", "")
+          .replace(/-/g, " "),
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 50,
+      });
+      return rejectWithValue(
+        msg
+          .replace("FirebaseError: ", "")
+          .replace("Firebase: ", "")
+          .replace("auth/", "")
+          .replace(/-/g, " ")
+      );
+    }
+  }
+);
+
+// Password reset
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Success",
+        text2: "Password reset email sent",
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 50,
+      });
+    } catch (error) {
+      console.log(`Error in resetPassword:`, error);
+      let msg = error.message;
+      if (msg.includes("invalid-email")) msg = "Invalid email";
+      if (msg.includes("user-not-found")) msg = "User not found";
       Toast.show({
         type: "error",
         position: "top",
@@ -173,6 +228,7 @@ export const fetchUserData = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
+    isLoading: false,
     user: null,
     isAuthenticated: undefined,
     status: "idle",
@@ -191,29 +247,57 @@ const authSlice = createSlice({
   },
   extraReducers: builder => {
     builder
+      .addCase(loginUser.pending, state => {
+        state.isLoading = true;
+      })
       .addCase(loginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
         state.status = "succeeded";
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
         state.status = "failed";
         state.error = action.payload;
       })
+      .addCase(logoutUser.pending, state => {
+        state.isLoading = true;
+      })
       .addCase(logoutUser.fulfilled, state => {
+        state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
         state.status = "idle";
       })
       .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
         state.status = "idle";
       })
+      .addCase(registerUser.pending, state => {
+        state.isLoading = true;
+      })
       .addCase(registerUser.fulfilled, (state, action) => {
-        // state.user = action.payload;
-        // state.isAuthenticated = true;
+        state.isLoading = false;
         state.status = "succeeded";
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.status = "idle";
+      })
+      .addCase(resetPassword.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(resetPassword.fulfilled, state => {
+        state.isLoading = false;
+        state.status = "succeeded";
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.status = "idle";
+        state.error = action.payload;
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.user = { ...state.user, ...action.payload };

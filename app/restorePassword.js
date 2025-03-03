@@ -1,31 +1,31 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BackButton, CustomKeyboardView, Loading } from "../../components";
+import { BackButton, CustomKeyboardView, Loading } from "../components";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
-import Toast from "react-native-toast-message";
-import { tripsFirebaseServices } from "../../services";
-import { useSelector } from "react-redux";
 
-export default function AddTrip() {
-  const { user } = useSelector(state => state.auth);
+import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
+import { resetPassword, setIsStatus } from "../redux/slices/authSlice";
+import { useRouter } from "expo-router";
+
+export default function RestorePassword() {
+  const dispatch = useDispatch();
   const router = useRouter();
-  const [place, setPlace] = useState();
-  const [country, setCountry] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const handleAddTrip = async () => {
+  const { status, isLoading } = useSelector(state => state.auth);
+  const [email, setEmail] = useState("");
+
+  const handleLogin = async () => {
     try {
-      if (!place || !country) {
+      if (!email) {
         Toast.show({
           type: "info",
           position: "top",
-          // text1: "Failed",
           text2: "Please fill all the fields",
           visibilityTime: 2000,
           autoHide: true,
@@ -33,38 +33,27 @@ export default function AddTrip() {
         });
         return;
       }
-      setIsLoading(true);
-      const { success } = await tripsFirebaseServices.addTrip(user.uid, {
-        place,
-        country,
-      });
-
-      if (success) {
-        Toast.show({
-          type: "success",
-          position: "top",
-          // text1: "Failed",
-          text2: "Trip details successfully created.",
-          visibilityTime: 2000,
-          autoHide: true,
-          topOffset: 50,
-        });
-        router.push("home");
-      }
+      dispatch(resetPassword({ email }));
     } catch (error) {
       Toast.show({
         type: "error",
         position: "top",
         text1: "Failed",
-        text2: "Error in saving trip.",
+        text2: "Error in password restore.",
         visibilityTime: 2000,
         autoHide: true,
         topOffset: 50,
       });
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (status === "succeeded") {
+      router.replace("emailReset");
+      // dispatch(setIsStatus("idle"));
+    }
+    return () => dispatch(setIsStatus("idle"));
+  }, [status]);
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1">
@@ -80,13 +69,13 @@ export default function AddTrip() {
                 style={{ fontSize: hp(3) }}
                 className="font-bold text-center text-gray-600"
               >
-                Add Trip
+                Restore Password
               </Text>
             </View>
             <View className="flex-row justify-center my-3 mt-5">
               <Image
                 style={{ width: wp(72), height: wp(72) }}
-                source={require("../../assets/images/addTrip.png")}
+                source={require("../assets/images/restorePassword.svg")}
               />
             </View>
             <View className="mx-4 gap-2">
@@ -94,26 +83,16 @@ export default function AddTrip() {
                 style={{ fontSize: hp(2) }}
                 className="font-bold text-gray-600"
               >
-                Where On Earth?
+                Email
               </Text>
               <TextInput
-                value={place}
-                onChangeText={setPlace}
-                className="bg-white rounded-full p-4 mb-3"
-              />
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
-              >
-                Which Country
-              </Text>
-              <TextInput
-                value={country}
-                onChangeText={setCountry}
+                value={email}
+                onChangeText={setEmail}
                 className="bg-white rounded-full p-4 mb-3"
               />
             </View>
           </View>
+
           <View className="mt-4">
             {isLoading ? (
               <View
@@ -124,7 +103,7 @@ export default function AddTrip() {
               </View>
             ) : (
               <TouchableOpacity
-                onPress={handleAddTrip}
+                onPress={handleLogin}
                 style={{ height: hp(7), width: wp(80) }}
                 className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
               >
@@ -132,7 +111,7 @@ export default function AddTrip() {
                   style={{ fontSize: hp(3) }}
                   className="text-white font-bold tracking-widest"
                 >
-                  Add Trip
+                  Restore
                 </Text>
               </TouchableOpacity>
             )}

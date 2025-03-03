@@ -1,1 +1,1 @@
-export { getRandomImage } from "./getRandomImage";
+export { getRandomImage, getRandomImageNumber, images } from "./getRandomImage";

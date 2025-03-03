@@ -41,6 +41,12 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="emailVerify" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="restorePassword"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="emailReset" options={{ headerShown: false }} />
+
           <Stack.Screen name="welcome" options={{ headerShown: false }} />
           <Stack.Screen name="signIn" options={{ headerShown: false }} />
           <Stack.Screen name="signUp" options={{ headerShown: false }} />
