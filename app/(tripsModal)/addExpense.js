@@ -8,17 +8,21 @@ import {
 } from "react-native-responsive-screen";
 import { BackButton, CustomKeyboardView } from "../../components";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { categories } from "../../constants/Categories";
+import { expensesFirebaseServices } from "../../services";
+import { useSelector } from "react-redux";
 
 export default function AddExpense() {
+  const item = useLocalSearchParams();
+  const { user } = useSelector(state => state.auth);
   const router = useRouter();
   const [title, setTitle] = useState();
   const [amount, setAmount] = useState();
   const [category, setCategory] = useState();
 
-  const handleAddExpense = () => {
+  const handleAddExpense = async () => {
     try {
       if (!title || !amount || !category) {
         Toast.show({
@@ -32,8 +36,15 @@ export default function AddExpense() {
         });
         return;
       }
+      const { success } = await expensesFirebaseServices.addExpense(
+        user.uid,
+        item.id,
+        { title, amount, category }
+      );
 
-      router.back();
+      if (success) {
+        router.back();
+      }
     } catch (error) {
       Toast.show({
         type: "error",
@@ -48,7 +59,10 @@ export default function AddExpense() {
   };
 
   return (
-    <SafeAreaView edges={["top"]} className="flex-1">
+    <SafeAreaView edges={["top"]} className="flex-1 mt-2">
+      <View style={{ zIndex: 9999 }}>
+        <Toast />
+      </View>
       <CustomKeyboardView>
         <StatusBar style="dark" />
         <View className="mx-4 pb-6 flex-1">

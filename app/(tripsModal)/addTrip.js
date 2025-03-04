@@ -40,16 +40,7 @@ export default function AddTrip() {
       });
 
       if (success) {
-        Toast.show({
-          type: "success",
-          position: "top",
-          // text1: "Failed",
-          text2: "Trip details successfully created.",
-          visibilityTime: 2000,
-          autoHide: true,
-          topOffset: 50,
-        });
-        router.push("home");
+        router.replace("home");
       }
     } catch (error) {
       Toast.show({
@@ -67,7 +58,10 @@ export default function AddTrip() {
   };
 
   return (
-    <SafeAreaView edges={["top"]} className="flex-1">
+    <SafeAreaView edges={["top"]} className="flex-1 mt-2">
+      <View style={{ zIndex: 9999 }}>
+        <Toast />
+      </View>
       <CustomKeyboardView>
         <StatusBar style="dark" />
         <View className="mx-4 pb-6 flex-1">

@@ -3,6 +3,7 @@ import "../global.css";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import { MenuProvider } from "react-native-popup-menu";
 
 import { View } from "react-native";
 import store from "../redux/store";
@@ -37,24 +38,30 @@ const MainLayout = () => {
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <View style={{ flex: 1 }}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="emailVerify" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="restorePassword"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="emailReset" options={{ headerShown: false }} />
+      <MenuProvider>
+        <View style={{ flex: 1 }}>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="emailVerify" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="restorePassword"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="emailReset" options={{ headerShown: false }} />
 
-          <Stack.Screen name="welcome" options={{ headerShown: false }} />
-          <Stack.Screen name="signIn" options={{ headerShown: false }} />
-          <Stack.Screen name="signUp" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-        <Toast />
-        <MainLayout />
-      </View>
+            <Stack.Screen name="welcome" options={{ headerShown: false }} />
+            <Stack.Screen name="signIn" options={{ headerShown: false }} />
+            <Stack.Screen name="signUp" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(tripsModal)"
+              options={{ headerShown: false, presentation: "modal" }}
+            />
+          </Stack>
+          <Toast />
+          <MainLayout />
+        </View>
+      </MenuProvider>
     </Provider>
   );
 }

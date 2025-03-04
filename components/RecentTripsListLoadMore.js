@@ -1,51 +1,54 @@
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { setPage, setItemsPerPage } from "../redux/slices/tripsSlice"; // Импортируем экшены
-
-import { EmptyList } from "./EmptyList";
-import { RecentTripsItem } from "./RecentTripsItem";
-import { tripsFirebaseServices } from "../services";
-import { Loading } from "./Loading";
+import { useSelector } from "react-redux";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-export function RecentTripsList() {
-  const { page, itemsPerPage } = useSelector(state => state.trips);
-  const { user } = useSelector(state => state.auth);
-  const dispatch = useDispatch();
-  const router = useRouter();
+import { EmptyList } from "./EmptyList";
+import { RecentTripsItem } from "./RecentTripsItem";
+import { tripsFirebaseServices } from "../services";
+import { Loading } from "./Loading";
 
+export function RecentTripsList() {
   const [trips, setTrips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(1);
+  const [lastDoc, setLastDoc] = useState(null); // Храним последний документ
+  const [isFetchingMore, setIsFetchingMore] = useState(false); // Блокируем повторные запросы
+  const { user } = useSelector(state => state.auth);
+  const router = useRouter();
 
-  const fetchTrips = async newPage => {
+  const fetchTrips = async (reset = false) => {
     if (!user?.uid) return;
 
     try {
-      setIsLoading(true);
+      if (reset) {
+        setIsLoading(true);
+      } else {
+        setIsFetchingMore(true);
+      }
+
       const {
         success,
         trips: newTrips,
-        total,
-      } = await tripsFirebaseServices.getUserTripsPagination(
+        lastDoc: newLastDoc,
+      } = await tripsFirebaseServices.getUserTrips(
         user.uid,
-        newPage,
-        itemsPerPage
+        reset ? null : lastDoc
       );
 
       if (success) {
-        setTrips(newTrips);
-        setTotalPages(Math.ceil(total / itemsPerPage));
+        setTrips(prevTrips => (reset ? newTrips : [...prevTrips, ...newTrips]));
+        setLastDoc(newLastDoc);
       }
     } catch (error) {
       console.log(`Error in fetchTrips: `, error);
     } finally {
       setIsLoading(false);
+      setIsFetchingMore(false);
     }
   };
 
@@ -55,7 +58,7 @@ export function RecentTripsList() {
         user.uid,
         tripId
       );
-      if (success) fetchTrips(page);
+      if (success) fetchTrips(true); // Перезагружаем список после удаления
     } catch (error) {
       console.log(`Error in deleteTrip: `, error);
     }
@@ -63,17 +66,14 @@ export function RecentTripsList() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchTrips(page);
-    }, [page])
+      fetchTrips(true);
+      return () => {};
+    }, [])
   );
 
-  const handlePageChange = newPage => {
-    dispatch(setPage(newPage));
-  };
-
   return (
-    <View className="mx-4 gap-4 ">
-      <View className="flex-row justify-between items-center">
+    <View className="mx-4 gap-4">
+      <View className=" flex-row justify-between items-center">
         <Text style={{ fontSize: hp(3) }} className="text-gray-600 font-bold">
           Recent Trips
         </Text>
@@ -102,6 +102,15 @@ export function RecentTripsList() {
             keyExtractor={item => item.id}
             columnWrapperStyle={{ justifyContent: "space-between" }}
             showsVerticalScrollIndicator={false}
+            onEndReached={() => {
+              if (!isFetchingMore && lastDoc) {
+                fetchTrips(false);
+              }
+            }}
+            onEndReachedThreshold={0.1} // Загружать новую страницу при прокрутке на 90%
+            ListFooterComponent={
+              isFetchingMore ? <Loading size={hp(2.5)} /> : null
+            }
             renderItem={({ item }) => (
               <RecentTripsItem
                 item={item}
@@ -109,35 +118,6 @@ export function RecentTripsList() {
                 deleteTrip={deleteTrip}
               />
             )}
-            ListFooterComponent={
-              totalPages === 0 ? null : (
-                <View className="flex-row justify-between items-center mt-4">
-                  <TouchableOpacity
-                    onPress={() => handlePageChange(page - 1)}
-                    disabled={page === 1}
-                    className={`p-2 px-4 border rounded-full ${
-                      page === 1 ? "bg-gray-200" : "bg-white"
-                    }`}
-                  >
-                    <Text className="text-gray-600 font-bold">←</Text>
-                  </TouchableOpacity>
-
-                  <Text className="text-gray-600 font-bold">
-                    Page {page} of {totalPages}
-                  </Text>
-
-                  <TouchableOpacity
-                    onPress={() => handlePageChange(page + 1)}
-                    disabled={page >= totalPages}
-                    className={`p-2 px-4 border rounded-full ${
-                      page === totalPages ? "bg-gray-200" : "bg-white"
-                    }`}
-                  >
-                    <Text className="text-gray-600 font-bold">→</Text>
-                  </TouchableOpacity>
-                </View>
-              )
-            }
           />
         )}
       </View>

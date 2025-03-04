@@ -40,7 +40,7 @@ export function RecentExpensesList({ item }) {
           Expenses
         </Text>
         <TouchableOpacity
-          onPress={() => router.push({ pathname: "/addExpense", params: item })}
+          onPress={() => router.push({ pathname: "addExpense", params: item })}
           className="p-2 px-3 bg-white border border-gray-200 rounded-full"
         >
           <Text style={{ fontSize: hp(2) }} className="text-gray-600 ">

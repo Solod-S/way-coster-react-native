@@ -8,7 +8,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Colors } from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 
@@ -16,7 +15,7 @@ export default function TripDetails() {
   const item = useLocalSearchParams();
   return (
     <SafeAreaView edges={["top"]} className="flex-1">
-      <ScrollView>
+      <ScrollView className="mt-2">
         <StatusBar style="dark" />
         <View className="px-4">
           <View className="relative">

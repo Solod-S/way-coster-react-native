@@ -46,7 +46,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView edges={["top"]} className="flex-1">
+    <SafeAreaView edges={["top", "bottom"]} className="flex-1">
       <ScrollView>
         <StatusBar style="dark" />
         <View className="flex-row justify-between items-center mx-4">
