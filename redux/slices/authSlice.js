@@ -263,18 +263,15 @@ const authSlice = createSlice({
       })
       .addCase(logoutUser.pending, state => {
         state.isLoading = true;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.status = "idle";
       })
       .addCase(logoutUser.fulfilled, state => {
         state.isLoading = false;
-        state.user = null;
-        state.isAuthenticated = false;
-        state.status = "idle";
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.user = null;
-        state.isAuthenticated = false;
-        state.status = "idle";
       })
       .addCase(registerUser.pending, state => {
         state.isLoading = true;

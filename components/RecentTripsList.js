@@ -15,7 +15,7 @@ import {
 
 export function RecentTripsList() {
   const { page, itemsPerPage } = useSelector(state => state.trips);
-  const { user } = useSelector(state => state.auth);
+  const { user, isAuthenticated } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export function RecentTripsList() {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchTrips = async newPage => {
-    if (!user?.uid) return;
+    if (!user?.uid || !isAuthenticated) return;
 
     try {
       setIsLoading(true);

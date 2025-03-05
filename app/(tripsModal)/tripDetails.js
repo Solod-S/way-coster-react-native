@@ -10,11 +10,15 @@ import {
 } from "react-native-responsive-screen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
+import Toast from "react-native-toast-message";
 
 export default function TripDetails() {
   const item = useLocalSearchParams();
   return (
     <SafeAreaView edges={["top"]} className="flex-1">
+      <View style={{ zIndex: 9999 }}>
+        <Toast />
+      </View>
       <ScrollView className="mt-2">
         <StatusBar style="dark" />
         <View className="px-4">

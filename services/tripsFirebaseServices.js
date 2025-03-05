@@ -139,28 +139,6 @@ tripsFirebaseServices.updateTrip = async (uid, tripId, updatedData) => {
 };
 
 // Get user trips
-// tripsFirebaseServices.getUserTrips = async uid => {
-//   if (!uid) {
-//     throw new Error("UID is required");
-//   }
-
-//   try {
-//     const tripsCollectionRef = collection(db, `users/${uid}/trips`);
-//     const q = query(tripsCollectionRef, orderBy("createdAt", "desc"));
-//     const querySnapshot = await getDocs(q);
-
-//     const trips = querySnapshot.docs.map(doc => ({
-//       id: doc.id,
-//       ...doc.data(),
-//     }));
-
-//     return { success: true, trips };
-//   } catch (error) {
-//     console.error("Error fetching trips: ", error);
-//     return { success: false, error: error.message };
-//   }
-// };
-
 tripsFirebaseServices.getUserTrips = async (uid, lastDoc = null) => {
   if (!uid) {
     throw new Error("UID is required");

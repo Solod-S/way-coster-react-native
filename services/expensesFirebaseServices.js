@@ -27,6 +27,24 @@ expensesFirebaseServices.addExpense = async (uid, tripId, expenseData) => {
       db,
       `users/${uid}/trips/${tripId}/expenses`
     );
+
+    // Check the current amount of expenses on the trip
+    const expensesSnapshot = await getDocs(expensesCollectionRef);
+    const expenseCount = expensesSnapshot.size;
+
+    if (expenseCount >= 40) {
+      Toast.show({
+        type: "info",
+        position: "top",
+        text1: "Limit Reached",
+        text2: "You have reached the maximum of 40 expenses for this trip.",
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 50,
+      });
+      return { success: false, error: "Expense limit reached" };
+    }
+
     const newExpenseRef = doc(expensesCollectionRef);
     await setDoc(newExpenseRef, {
       ...expenseData,

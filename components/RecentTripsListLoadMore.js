@@ -107,7 +107,7 @@ export function RecentTripsList() {
                 fetchTrips(false);
               }
             }}
-            onEndReachedThreshold={0.1} // Загружать новую страницу при прокрутке на 90%
+            onEndReachedThreshold={0.1}
             ListFooterComponent={
               isFetchingMore ? <Loading size={hp(2.5)} /> : null
             }
