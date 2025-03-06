@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/slices/authSlice";
 import { useRouter } from "expo-router";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export default function SignIn() {
   const router = useRouter();
@@ -67,57 +68,71 @@ export default function SignIn() {
                 Login
               </Text>
             </View>
-            <View className="flex-row justify-center my-3 mt-5">
+            <Animated.View
+              entering={FadeInDown.delay(100).springify()}
+              className="flex-row justify-center my-3 mt-5"
+            >
               <Image
                 style={{ width: wp(72), height: wp(72) }}
                 source={require("../assets/images/login.svg")}
               />
-            </View>
-            <View className="mx-4 gap-2">
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
+            </Animated.View>
+            <View className="mx-4">
+              <Animated.View
+                className="gap-2"
+                entering={FadeInDown.delay(200).springify()}
               >
-                Email
-              </Text>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                className="bg-white rounded-full p-4 mb-3"
-              />
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
-              >
-                Password
-              </Text>
-              <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
-                <TextInput
-                  secureTextEntry={!showPassword}
-                  value={password}
-                  onChangeText={setPassword}
-                  className="flex-1"
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
                 >
-                  <Ionicons
-                    name={showPassword ? "eye" : "eye-off"}
-                    size={24}
-                    color="gray"
+                  Email
+                </Text>
+                <TextInput
+                  value={email}
+                  onChangeText={setEmail}
+                  className="bg-white rounded-full p-4 mb-3"
+                />
+              </Animated.View>
+              <Animated.View
+                className="gap-2"
+                entering={FadeInDown.delay(300).springify()}
+              >
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
+                >
+                  Password
+                </Text>
+                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                  <TextInput
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                    className="flex-1"
                   />
-                </TouchableOpacity>
-              </View>
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye" : "eye-off"}
+                      size={24}
+                      color="gray"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
               <View className="flex-row justify-end">
                 <TouchableOpacity
                   onPress={() => router.push("restorePassword")}
                 >
-                  <Text
+                  <Animated.Text
+                    entering={FadeInDown.delay(400).springify()}
                     style={{ fontSize: hp(1.5) }}
                     className=" text-gray-600"
                   >
                     Forget Password?
-                  </Text>
+                  </Animated.Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -132,18 +147,20 @@ export default function SignIn() {
                 <Loading color="white" size={hp(3)} />
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={handleLogin}
-                style={{ height: hp(7), width: wp(80) }}
-                className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-              >
-                <Text
-                  style={{ fontSize: hp(3) }}
-                  className="text-white font-bold tracking-widest"
+              <Animated.View entering={FadeInDown.delay(500).springify()}>
+                <TouchableOpacity
+                  onPress={handleLogin}
+                  style={{ height: hp(7), width: wp(80) }}
+                  className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
                 >
-                  Login
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{ fontSize: hp(3) }}
+                    className="text-white font-bold tracking-widest"
+                  >
+                    Login
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
             )}
           </View>
         </View>

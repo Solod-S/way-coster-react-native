@@ -42,16 +42,17 @@ export default function RootLayout() {
         <View style={{ flex: 1 }}>
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="emailVerify" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(notificationScreen)"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="welcome" options={{ headerShown: false }} />
+            <Stack.Screen name="signIn" options={{ headerShown: false }} />
+            <Stack.Screen name="signUp" options={{ headerShown: false }} />
             <Stack.Screen
               name="restorePassword"
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="emailReset" options={{ headerShown: false }} />
-
-            <Stack.Screen name="welcome" options={{ headerShown: false }} />
-            <Stack.Screen name="signIn" options={{ headerShown: false }} />
-            <Stack.Screen name="signUp" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="(tripsModal)"

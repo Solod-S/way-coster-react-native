@@ -15,7 +15,6 @@ import { UsePreventBack } from "../hooks/usePreventBack";
 export default function HomeScreen() {
   UsePreventBack();
   const router = useRouter();
-  const user = useSelector(state => state.user);
 
   return (
     <SafeAreaView className="flex-1 justify-between pb-2 items-center">

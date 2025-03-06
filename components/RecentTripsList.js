@@ -12,6 +12,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export function RecentTripsList() {
   const { page, itemsPerPage } = useSelector(state => state.trips);
@@ -19,6 +20,7 @@ export function RecentTripsList() {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const [refreshing, setRefreshing] = useState(false);
   const [trips, setTrips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
@@ -73,7 +75,10 @@ export function RecentTripsList() {
 
   return (
     <View className="mx-4 gap-4 ">
-      <View className="flex-row justify-between items-center">
+      <Animated.View
+        entering={FadeIn.delay(300).springify()}
+        className="flex-row justify-between items-center"
+      >
         <Text style={{ fontSize: hp(3) }} className="text-gray-600 font-bold">
           Recent Trips
         </Text>
@@ -85,7 +90,7 @@ export function RecentTripsList() {
             Add Trip
           </Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
       <View>
         {isLoading ? (
@@ -102,9 +107,10 @@ export function RecentTripsList() {
             keyExtractor={item => item.id}
             columnWrapperStyle={{ justifyContent: "space-between" }}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <RecentTripsItem
                 item={item}
+                index={index}
                 router={router}
                 deleteTrip={deleteTrip}
               />

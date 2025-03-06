@@ -13,6 +13,7 @@ import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
 import { registerUser, setIsStatus } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export default function SignUp() {
   const { status, isLoading } = useSelector(state => state.auth);
@@ -77,83 +78,105 @@ export default function SignUp() {
                 Sign Up
               </Text>
             </View>
-            <View className="flex-row justify-center my-3 mt-5">
+
+            <Animated.View
+              entering={FadeInDown.delay(100).springify()}
+              className="flex-row justify-center my-3 mt-5"
+            >
               <Image
                 style={{ width: wp(55), height: wp(55) }}
                 source={require("../assets/images/signup.svg")}
               />
-            </View>
-            <View className="mx-4 gap-2">
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
+            </Animated.View>
+            <View className="mx-4 ">
+              <Animated.View
+                entering={FadeInDown.delay(200).springify()}
+                className="gap-2"
               >
-                Name
-              </Text>
-              <TextInput
-                value={name}
-                onChangeText={setName}
-                className="bg-white rounded-full p-4 mb-3"
-              />
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
-              >
-                Email
-              </Text>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                className="bg-white rounded-full p-4 mb-3"
-              />
-
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
-              >
-                Password
-              </Text>
-              <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
-                <TextInput
-                  secureTextEntry={!showPassword}
-                  value={password}
-                  onChangeText={setPassword}
-                  style={{ flex: 1 }}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
                 >
-                  <Ionicons
-                    name={showPassword ? "eye-off" : "eye"}
-                    size={24}
-                    color="gray"
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
-              >
-                Confirm Password
-              </Text>
-              <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                  Name
+                </Text>
                 <TextInput
-                  secureTextEntry={!showConfirmPassword}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  style={{ flex: 1 }}
+                  value={name}
+                  onChangeText={setName}
+                  className="bg-white rounded-full p-4 mb-3"
                 />
-                <TouchableOpacity
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(300).springify()}
+                className="gap-2"
+              >
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
                 >
-                  <Ionicons
-                    name={showConfirmPassword ? "eye-off" : "eye"}
-                    size={24}
-                    color="gray"
+                  Email
+                </Text>
+                <TextInput
+                  value={email}
+                  onChangeText={setEmail}
+                  className="bg-white rounded-full p-4 mb-3"
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).springify()}
+                className="gap-2"
+              >
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
+                >
+                  Password
+                </Text>
+                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                  <TextInput
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                    style={{ flex: 1 }}
                   />
-                </TouchableOpacity>
-              </View>
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-off" : "eye"}
+                      size={24}
+                      color="gray"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(500).springify()}
+                className="gap-2"
+              >
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
+                >
+                  Confirm Password
+                </Text>
+                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                  <TextInput
+                    secureTextEntry={!showConfirmPassword}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    style={{ flex: 1 }}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    <Ionicons
+                      name={showConfirmPassword ? "eye-off" : "eye"}
+                      size={24}
+                      color="gray"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
             </View>
           </View>
           <View className="mt-4">
@@ -165,18 +188,23 @@ export default function SignUp() {
                 <Loading color="white" size={hp(3)} />
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={handleSignUp}
-                style={{ height: hp(7), width: wp(80) }}
-                className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
+              <Animated.View
+                entering={FadeInDown.delay(600).springify()}
+                className="gap-2"
               >
-                <Text
-                  style={{ fontSize: hp(3) }}
-                  className="text-white font-bold tracking-widest"
+                <TouchableOpacity
+                  onPress={handleSignUp}
+                  style={{ height: hp(7), width: wp(80) }}
+                  className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
                 >
-                  Sign Up
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{ fontSize: hp(3) }}
+                    className="text-white font-bold tracking-widest"
+                  >
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
             )}
           </View>
         </View>

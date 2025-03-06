@@ -6,18 +6,20 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BackButton, CustomKeyboardView } from "../../components";
+import { BackButton, CustomKeyboardView, Loading } from "../../components";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { categories } from "../../constants/Categories";
 import { expensesFirebaseServices } from "../../services";
 import { useSelector } from "react-redux";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export default function AddExpense() {
   const item = useLocalSearchParams();
   const { user } = useSelector(state => state.auth);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState();
   const [amount, setAmount] = useState();
   const [category, setCategory] = useState();
@@ -36,6 +38,7 @@ export default function AddExpense() {
         });
         return;
       }
+      setIsLoading(true);
       const { success } = await expensesFirebaseServices.addExpense(
         user.uid,
         item.id,
@@ -55,6 +58,8 @@ export default function AddExpense() {
         autoHide: true,
         topOffset: 50,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +72,10 @@ export default function AddExpense() {
         <StatusBar style="dark" />
         <View className="mx-4 pb-6 flex-1">
           <View>
-            <View className="relative">
+            <Animated.View
+              entering={FadeIn.delay(300).springify()}
+              className="relative"
+            >
               <View className="absolute top-0 left-0 z-10">
                 <BackButton />
               </View>
@@ -77,41 +85,57 @@ export default function AddExpense() {
               >
                 Add Expense
               </Text>
-            </View>
-            <View className="flex-row justify-center my-3 ">
+            </Animated.View>
+            <Animated.View
+              entering={FadeIn.delay(400).springify()}
+              className="flex-row justify-center my-3 "
+            >
               <Image
                 style={{ width: wp(65), height: wp(65) }}
                 source={require("../../assets/images/expenseBanner.png")}
               />
-            </View>
+            </Animated.View>
             <View className="mx-4 gap-2">
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
+              <Animated.View
+                entering={FadeIn.delay(500).springify()}
+                className="gap-2"
               >
-                For What?
-              </Text>
-              <TextInput
-                value={title}
-                onChangeText={setTitle}
-                className="bg-white rounded-full p-4 mb-3"
-              />
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
+                >
+                  For What?
+                </Text>
+                <TextInput
+                  value={title}
+                  onChangeText={setTitle}
+                  className="bg-white rounded-full p-4 mb-3"
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeIn.delay(600).springify()}
+                className="gap-2"
               >
-                How mush?
-              </Text>
-              <TextInput
-                value={amount}
-                //  onChangeText={(text) => setAmount(text.replace(/[^0-9]/g, ""))} // Оставляет только цифры
-                keyboardType="numeric"
-                onChangeText={setAmount}
-                className="bg-white rounded-full p-4 mb-3"
-              />
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
+                >
+                  How mush?
+                </Text>
+                <TextInput
+                  value={amount}
+                  //  onChangeText={(text) => setAmount(text.replace(/[^0-9]/g, ""))} // Оставляет только цифры
+                  keyboardType="numeric"
+                  onChangeText={setAmount}
+                  className="bg-white rounded-full p-4 mb-3"
+                />
+              </Animated.View>
             </View>
           </View>
-          <View className="mx-4 gap-2">
+          <Animated.View
+            entering={FadeIn.delay(700).springify()}
+            className="mx-4 gap-2"
+          >
             <Text
               style={{ fontSize: hp(2) }}
               className="font-bold text-gray-600"
@@ -135,20 +159,31 @@ export default function AddExpense() {
                 );
               })}
             </View>
-          </View>
+          </Animated.View>
           <View className="mt-4">
-            <TouchableOpacity
-              onPress={handleAddExpense}
-              style={{ height: hp(7), width: wp(80) }}
-              className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-            >
-              <Text
-                style={{ fontSize: hp(3) }}
-                className="text-white font-bold tracking-widest"
+            {isLoading ? (
+              <View
+                style={{ height: hp(7), width: wp(80) }}
+                className="w-full shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
               >
-                Add Expense
-              </Text>
-            </TouchableOpacity>
+                <Loading color="white" size={hp(3)} />
+              </View>
+            ) : (
+              <Animated.View entering={FadeIn.delay(800).springify()}>
+                <TouchableOpacity
+                  onPress={handleAddExpense}
+                  style={{ height: hp(7), width: wp(80) }}
+                  className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
+                >
+                  <Text
+                    style={{ fontSize: hp(3) }}
+                    className="text-white font-bold tracking-widest"
+                  >
+                    Add Expense
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
+            )}
           </View>
         </View>
       </CustomKeyboardView>

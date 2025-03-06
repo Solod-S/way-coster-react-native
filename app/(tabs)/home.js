@@ -9,7 +9,7 @@ import {
   Vibration,
   View,
 } from "react-native";
-import { Loading, RecentTripsList } from "../../components";
+import { RecentTripsList } from "../../components";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -20,6 +20,7 @@ import { Image } from "expo-image";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/slices/authSlice";
 import { UsePreventBack } from "../../hooks/usePreventBack";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
@@ -49,7 +50,10 @@ export default function HomeScreen() {
     <SafeAreaView edges={["top", "bottom"]} className="flex-1">
       <ScrollView>
         <StatusBar style="dark" />
-        <View className="flex-row justify-between items-center mx-4">
+        <Animated.View
+          entering={FadeIn.delay(100).springify()}
+          className="flex-row justify-between items-center mx-4"
+        >
           <Text
             className={`${Colors.heading} font-bold`}
             style={{ fontSize: hp(4) }}
@@ -80,13 +84,16 @@ export default function HomeScreen() {
               </Text>
             </TouchableOpacity>
           )}
-        </View>
-        <View className="flex-row justify-center items-center p-4 ">
+        </Animated.View>
+        <Animated.View
+          entering={FadeIn.delay(200).springify()}
+          className="flex-row justify-center items-center p-4 "
+        >
           <Image
             style={{ width: wp(60), height: wp(60) }}
             source={require("../../assets/images/banner.png")}
           />
-        </View>
+        </Animated.View>
         <RecentTripsList />
       </ScrollView>
     </SafeAreaView>

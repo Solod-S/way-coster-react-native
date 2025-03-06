@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { tripsFirebaseServices } from "../../services";
 import { useSelector } from "react-redux";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export default function AddTrip() {
   const { user } = useSelector(state => state.auth);
@@ -66,7 +67,10 @@ export default function AddTrip() {
         <StatusBar style="dark" />
         <View className="mx-4 pb-6 flex-1">
           <View>
-            <View className="relative">
+            <Animated.View
+              entering={FadeIn.delay(300).springify()}
+              className="relative"
+            >
               <View className="absolute top-0 left-0 z-10">
                 <BackButton />
               </View>
@@ -76,36 +80,49 @@ export default function AddTrip() {
               >
                 Add Trip
               </Text>
-            </View>
-            <View className="flex-row justify-center my-3 mt-5">
+            </Animated.View>
+            <Animated.View
+              entering={FadeIn.delay(400).springify()}
+              className="flex-row justify-center my-3 mt-5"
+            >
               <Image
                 style={{ width: wp(72), height: wp(72) }}
                 source={require("../../assets/images/addTrip.png")}
               />
-            </View>
+            </Animated.View>
             <View className="mx-4 gap-2">
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
+              <Animated.View
+                entering={FadeIn.delay(500).springify()}
+                className="gap-2"
               >
-                Where On Earth?
-              </Text>
-              <TextInput
-                value={place}
-                onChangeText={setPlace}
-                className="bg-white rounded-full p-4 mb-3"
-              />
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
+                >
+                  Where On Earth?
+                </Text>
+                <TextInput
+                  value={place}
+                  onChangeText={setPlace}
+                  className="bg-white rounded-full p-4 mb-3"
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeIn.delay(600).springify()}
+                className="gap-2"
               >
-                Which Country
-              </Text>
-              <TextInput
-                value={country}
-                onChangeText={setCountry}
-                className="bg-white rounded-full p-4 mb-3"
-              />
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-gray-600"
+                >
+                  Which Country
+                </Text>
+                <TextInput
+                  value={country}
+                  onChangeText={setCountry}
+                  className="bg-white rounded-full p-4 mb-3"
+                />
+              </Animated.View>
             </View>
           </View>
           <View className="mt-4">
@@ -117,18 +134,20 @@ export default function AddTrip() {
                 <Loading color="white" size={hp(3)} />
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={handleAddTrip}
-                style={{ height: hp(7), width: wp(80) }}
-                className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-              >
-                <Text
-                  style={{ fontSize: hp(3) }}
-                  className="text-white font-bold tracking-widest"
+              <Animated.View entering={FadeIn.delay(700).springify()}>
+                <TouchableOpacity
+                  onPress={handleAddTrip}
+                  style={{ height: hp(7), width: wp(80) }}
+                  className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
                 >
-                  Add Trip
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{ fontSize: hp(3) }}
+                    className="text-white font-bold tracking-widest"
+                  >
+                    Add Trip
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
             )}
           </View>
         </View>

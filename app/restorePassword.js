@@ -8,11 +8,11 @@ import {
 } from "react-native-responsive-screen";
 import { BackButton, CustomKeyboardView, Loading } from "../components";
 import { Image } from "expo-image";
-
 import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
 import { resetPassword, setIsStatus } from "../redux/slices/authSlice";
 import { useRouter } from "expo-router";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export default function RestorePassword() {
   const dispatch = useDispatch();
@@ -72,13 +72,20 @@ export default function RestorePassword() {
                 Restore Password
               </Text>
             </View>
-            <View className="flex-row justify-center my-3 mt-5">
+            <Animated.View
+              entering={FadeInDown.delay(100).springify()}
+              className="flex-row justify-center my-3 mt-5"
+            >
               <Image
                 style={{ width: wp(72), height: wp(72) }}
                 source={require("../assets/images/restorePassword.svg")}
               />
-            </View>
-            <View className="mx-4 gap-2">
+            </Animated.View>
+
+            <Animated.View
+              entering={FadeInDown.delay(200).springify()}
+              className="mx-4 gap-2"
+            >
               <Text
                 style={{ fontSize: hp(2) }}
                 className="font-bold text-gray-600"
@@ -90,7 +97,7 @@ export default function RestorePassword() {
                 onChangeText={setEmail}
                 className="bg-white rounded-full p-4 mb-3"
               />
-            </View>
+            </Animated.View>
           </View>
 
           <View className="mt-4">
@@ -102,18 +109,20 @@ export default function RestorePassword() {
                 <Loading color="white" size={hp(3)} />
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={handleLogin}
-                style={{ height: hp(7), width: wp(80) }}
-                className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-              >
-                <Text
-                  style={{ fontSize: hp(3) }}
-                  className="text-white font-bold tracking-widest"
+              <Animated.View entering={FadeInDown.delay(300).springify()}>
+                <TouchableOpacity
+                  onPress={handleLogin}
+                  style={{ height: hp(7), width: wp(80) }}
+                  className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
                 >
-                  Restore
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{ fontSize: hp(3) }}
+                    className="text-white font-bold tracking-widest"
+                  >
+                    Restore
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
             )}
           </View>
         </View>

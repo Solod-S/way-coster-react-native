@@ -8,18 +8,17 @@ import {
   Vibration,
   View,
 } from "react-native";
-import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { getRandomImage } from "../utils";
 import { EmptyList } from "./EmptyList";
 import { useFocusEffect, useRouter } from "expo-router";
 import { RecentExpenseItem } from "./RecentExpenseItem";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { expensesFirebaseServices } from "../services";
 import { Loading } from "./Loading";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
 export function RecentExpensesList({ item }) {
   const router = useRouter();
@@ -100,7 +99,10 @@ export function RecentExpensesList({ item }) {
 
   return (
     <View className="mx-4 gap-4">
-      <View className=" flex-row justify-between items-center">
+      <Animated.View
+        entering={FadeIn.delay(500).springify()}
+        className=" flex-row justify-between items-center"
+      >
         <Text style={{ fontSize: hp(3) }} className="text-gray-600 font-bold">
           Expenses
         </Text>
@@ -112,36 +114,42 @@ export function RecentExpensesList({ item }) {
             Add Expense
           </Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
       <View>
         {isLoading ? (
           <View className="mt-12">
             <Loading color="red" size={hp(3)} />
           </View>
         ) : (
-          <FlatList
-            data={expenses}
-            numColumns={1}
-            ListEmptyComponent={
-              <EmptyList message={"No expenses recorded yet."} />
-            }
-            keyExtractor={item => item.id}
-            showsVerticalScrollIndicator={false}
-            onEndReached={() => {
-              if (!isFetchingMore && lastDoc) {
-                fetchExpenses(false);
+          <Animated.View entering={FadeIn.delay(600).springify()}>
+            <FlatList
+              data={expenses}
+              numColumns={1}
+              ListEmptyComponent={
+                <EmptyList message={"No expenses recorded yet."} />
               }
-            }}
-            onEndReachedThreshold={0.1}
-            ListFooterComponent={
-              isFetchingMore ? <Loading size={hp(2.5)} /> : null
-            }
-            renderItem={({ item }) => {
-              return (
-                <RecentExpenseItem item={item} handleDelete={handleDelete} />
-              );
-            }}
-          />
+              keyExtractor={item => item.id}
+              showsVerticalScrollIndicator={false}
+              onEndReached={() => {
+                if (!isFetchingMore && lastDoc) {
+                  fetchExpenses(false);
+                }
+              }}
+              onEndReachedThreshold={0.1}
+              ListFooterComponent={
+                isFetchingMore ? <Loading size={hp(2.5)} /> : null
+              }
+              renderItem={({ item, index }) => {
+                return (
+                  <RecentExpenseItem
+                    item={item}
+                    handleDelete={handleDelete}
+                    index={index}
+                  />
+                );
+              }}
+            />
+          </Animated.View>
         )}
       </View>
     </View>
