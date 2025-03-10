@@ -53,6 +53,7 @@ export default function SignUp() {
 
     dispatch(registerUser({ email, password, fullName: name }));
   };
+  
   useEffect(() => {
     if (status === "succeeded") {
       router.replace("emailVerify");
