@@ -53,7 +53,7 @@ export default function SignUp() {
 
     dispatch(registerUser({ email, password, fullName: name }));
   };
-  
+
   useEffect(() => {
     if (status === "succeeded") {
       router.replace("emailVerify");
@@ -132,7 +132,7 @@ export default function SignUp() {
                 >
                   Password
                 </Text>
-                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                <View className="flex-row items-center bg-white rounded-full px-2 py-1 mb-3">
                   <TextInput
                     secureTextEntry={!showPassword}
                     value={password}
@@ -160,7 +160,7 @@ export default function SignUp() {
                 >
                   Confirm Password
                 </Text>
-                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                <View className="flex-row items-center bg-white rounded-full px-2 py-1 mb-3">
                   <TextInput
                     secureTextEntry={!showConfirmPassword}
                     value={confirmPassword}

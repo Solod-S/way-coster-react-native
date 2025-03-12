@@ -26,7 +26,7 @@ export function RecentTripsList() {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchTrips = async newPage => {
-    if (!user?.uid || !isAuthenticated) return;
+    if (!isAuthenticated || !user?.uid) return;
 
     try {
       setIsLoading(true);

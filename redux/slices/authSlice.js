@@ -186,23 +186,50 @@ export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
 });
 
 // Initialize the authentication listener
+// export const initAuthListener = () => dispatch => {
+//   dispatch(setIsAuthenticated(undefined)); // Пока не определено
+//   return onAuthStateChanged(auth, async user => {
+//     console.log(`user`, user);
+//     if (user && user?.emailVerified) {
+//       const cleanUser = {
+//         uid: user?.uid,
+//         email: user?.email,
+//         displayName: user?.displayName,
+//         emailVerified: user?.emailVerified,
+//         photoURL: user?.photoURL,
+//       };
+//       dispatch(setUser(cleanUser));
+//       dispatch(setIsAuthenticated(true));
+//       dispatch(fetchUserData(cleanUser.uid));
+//     } else {
+//       dispatch(setUser(null));
+//       dispatch(setIsAuthenticated(false));
+//     }
+//   });
+// };
+
 export const initAuthListener = () => dispatch => {
   dispatch(setIsAuthenticated(undefined)); // Пока не определено
   return onAuthStateChanged(auth, async user => {
-    if (user && user.emailVerified) {
-      const cleanUser = {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        emailVerified: user.emailVerified,
-        photoURL: user.photoURL,
-      };
-      dispatch(setUser(cleanUser));
-      dispatch(setIsAuthenticated(true));
-      dispatch(fetchUserData(cleanUser.uid));
-    } else {
-      dispatch(setUser(null));
-      dispatch(setIsAuthenticated(false));
+    try {
+      console.log(`user`, user?.displayName);
+      if (user && user?.emailVerified) {
+        const cleanUser = {
+          uid: user?.uid,
+          email: user?.email,
+          displayName: user?.displayName,
+          emailVerified: user?.emailVerified,
+          photoURL: user?.photoURL,
+        };
+        dispatch(setUser(cleanUser));
+        dispatch(setIsAuthenticated(true));
+        dispatch(fetchUserData(cleanUser.uid));
+      } else {
+        dispatch(setUser(null));
+        dispatch(setIsAuthenticated(false));
+      }
+    } catch (error) {
+      console.error("Error in auth state listener: ", error);
     }
   });
 };

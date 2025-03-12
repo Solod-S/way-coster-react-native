@@ -10,7 +10,7 @@ import store from "../redux/store";
 import { useEffect } from "react";
 import { initAuthListener } from "@/redux/slices/authSlice";
 
-const MainLayout = () => {
+const MainLayout = ({ children }) => {
   const { user, isAuthenticated } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const segments = useSegments();
@@ -26,20 +26,24 @@ const MainLayout = () => {
 
     const inApp = segments[0] == "(tabs)";
     if (isAuthenticated && !inApp) {
-      router.replace("home");
+      setTimeout(() => {
+        router.replace("home");
+      }, 300);
     } else if (isAuthenticated == false) {
-      router.replace("welcome");
+      setTimeout(() => {
+        router.replace("welcome");
+      }, 300);
     }
   }, [isAuthenticated]);
 
-  return <View></View>;
+  return <View style={{ flex: 1 }}>{children}</View>;
 };
 
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <MenuProvider>
-        <View style={{ flex: 1 }}>
+      <MainLayout>
+        <MenuProvider>
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen
@@ -60,9 +64,9 @@ export default function RootLayout() {
             />
           </Stack>
           <Toast />
-          <MainLayout />
-        </View>
-      </MenuProvider>
+          {/* <MainLayout /> */}
+        </MenuProvider>
+      </MainLayout>
     </Provider>
   );
 }

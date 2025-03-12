@@ -51,7 +51,7 @@ export default function HomeScreen() {
       <ScrollView>
         <StatusBar style="dark" />
         <Animated.View
-          entering={FadeIn.delay(100).springify()}
+          entering={FadeIn.delay(100)}
           className="flex-row justify-between items-center mx-4"
         >
           <Text
@@ -86,7 +86,7 @@ export default function HomeScreen() {
           )}
         </Animated.View>
         <Animated.View
-          entering={FadeIn.delay(200).springify()}
+          entering={FadeIn.delay(200)}
           className="flex-row justify-center items-center p-4 "
         >
           <Image

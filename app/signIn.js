@@ -104,7 +104,7 @@ export default function SignIn() {
                 >
                   Password
                 </Text>
-                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
+                <View className="flex-row items-center bg-white rounded-full px-2 py-1 mb-3">
                   <TextInput
                     secureTextEntry={!showPassword}
                     value={password}
