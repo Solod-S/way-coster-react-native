@@ -1,66 +1,55 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BackButton, CustomKeyboardView, Loading } from "../components";
+import { BackButton, CustomKeyboardView, Loading } from "../../components";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+
 import Toast from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
-import { registerUser, setIsStatus } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../redux/slices/authSlice";
+import { useRouter } from "expo-router";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
-export default function SignUp() {
-  const { status, isLoading } = useSelector(state => state.auth);
+export default function SignIn() {
   const router = useRouter();
+  const { isLoading } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSignUp = () => {
-    if (!email || !password || !name || !confirmPassword) {
-      Toast.show({
-        type: "info",
-        position: "top",
-        text2: "Please fill all the fields",
-        visibilityTime: 2000,
-        autoHide: true,
-        topOffset: 50,
-      });
-      return;
-    }
-
-    if (password !== confirmPassword) {
+  const handleLogin = async () => {
+    try {
+      if (!email || !password) {
+        Toast.show({
+          type: "info",
+          position: "top",
+          text2: "Please fill all the fields",
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
+        return;
+      }
+      dispatch(loginUser({ email, password }));
+    } catch (error) {
       Toast.show({
         type: "error",
         position: "top",
-        text2: "Passwords do not match",
+        text1: "Failed",
+        text2: "Error in saving trip.",
         visibilityTime: 2000,
         autoHide: true,
         topOffset: 50,
       });
-      return;
     }
-
-    dispatch(registerUser({ email, password, fullName: name }));
   };
-
-  useEffect(() => {
-    if (status === "succeeded") {
-      router.replace("emailVerify");
-      // dispatch(setIsStatus("idle"));
-    }
-    return () => dispatch(setIsStatus("idle"));
-  }, [status]);
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1">
@@ -76,39 +65,22 @@ export default function SignUp() {
                 style={{ fontSize: hp(3) }}
                 className="font-bold text-center text-gray-600"
               >
-                Sign Up
+                Login
               </Text>
             </View>
-
             <Animated.View
               entering={FadeInDown.delay(100).springify()}
               className="flex-row justify-center my-3 mt-5"
             >
               <Image
-                style={{ width: wp(55), height: wp(55) }}
-                source={require("../assets/images/signup.svg")}
+                style={{ width: wp(72), height: wp(72) }}
+                source={require("../../assets/images/login.svg")}
               />
             </Animated.View>
-            <View className="mx-4 ">
+            <View className="mx-4">
               <Animated.View
+                className="gap-2"
                 entering={FadeInDown.delay(200).springify()}
-                className="gap-2"
-              >
-                <Text
-                  style={{ fontSize: hp(2) }}
-                  className="font-bold text-gray-600"
-                >
-                  Name
-                </Text>
-                <TextInput
-                  value={name}
-                  onChangeText={setName}
-                  className="bg-white rounded-full p-4 mb-3"
-                />
-              </Animated.View>
-              <Animated.View
-                entering={FadeInDown.delay(300).springify()}
-                className="gap-2"
               >
                 <Text
                   style={{ fontSize: hp(2) }}
@@ -123,8 +95,8 @@ export default function SignUp() {
                 />
               </Animated.View>
               <Animated.View
-                entering={FadeInDown.delay(400).springify()}
                 className="gap-2"
+                entering={FadeInDown.delay(300).springify()}
               >
                 <Text
                   style={{ fontSize: hp(2) }}
@@ -137,49 +109,35 @@ export default function SignUp() {
                     secureTextEntry={!showPassword}
                     value={password}
                     onChangeText={setPassword}
-                    style={{ flex: 1 }}
+                    className="flex-1"
                   />
                   <TouchableOpacity
                     onPress={() => setShowPassword(!showPassword)}
                   >
                     <Ionicons
-                      name={showPassword ? "eye-off" : "eye"}
+                      name={showPassword ? "eye" : "eye-off"}
                       size={24}
                       color="gray"
                     />
                   </TouchableOpacity>
                 </View>
               </Animated.View>
-              <Animated.View
-                entering={FadeInDown.delay(500).springify()}
-                className="gap-2"
-              >
-                <Text
-                  style={{ fontSize: hp(2) }}
-                  className="font-bold text-gray-600"
+              <View className="flex-row justify-end">
+                <TouchableOpacity
+                  onPress={() => router.push("restorePassword")}
                 >
-                  Confirm Password
-                </Text>
-                <View className="flex-row items-center bg-white rounded-full px-2 py-1 mb-3">
-                  <TextInput
-                    secureTextEntry={!showConfirmPassword}
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    style={{ flex: 1 }}
-                  />
-                  <TouchableOpacity
-                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  <Animated.Text
+                    entering={FadeInDown.delay(400).springify()}
+                    style={{ fontSize: hp(1.5) }}
+                    className=" text-gray-600"
                   >
-                    <Ionicons
-                      name={showConfirmPassword ? "eye-off" : "eye"}
-                      size={24}
-                      color="gray"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </Animated.View>
+                    Forget Password?
+                  </Animated.Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
+
           <View className="mt-4">
             {isLoading ? (
               <View
@@ -189,12 +147,9 @@ export default function SignUp() {
                 <Loading color="white" size={hp(3)} />
               </View>
             ) : (
-              <Animated.View
-                entering={FadeInDown.delay(600).springify()}
-                className="gap-2"
-              >
+              <Animated.View entering={FadeInDown.delay(500).springify()}>
                 <TouchableOpacity
-                  onPress={handleSignUp}
+                  onPress={handleLogin}
                   style={{ height: hp(7), width: wp(80) }}
                   className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
                 >
@@ -202,7 +157,7 @@ export default function SignUp() {
                     style={{ fontSize: hp(3) }}
                     className="text-white font-bold tracking-widest"
                   >
-                    Sign Up
+                    Login
                   </Text>
                 </TouchableOpacity>
               </Animated.View>

@@ -22,17 +22,24 @@ const MainLayout = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (typeof isAuthenticated == "undefined") return;
-
-    const inApp = segments[0] == "(tabs)";
-    if (isAuthenticated && !inApp) {
-      setTimeout(() => {
-        router.replace("home");
-      }, 300);
-    } else if (isAuthenticated == false) {
-      setTimeout(() => {
-        router.replace("welcome");
-      }, 300);
+    if (typeof isAuthenticated === "undefined") return;
+    try {
+      const inApp = segments[0] === "(tabs)";
+      const inTripModal = segments[0] === "(tripsModal)";
+      const inNotification = segments[0] === "(notificationScreen)";
+      const inAuth = segments[0] === "(auth)";
+      // const inNotificationScreen = segments[0] === "(notificationScreen)";
+      if (isAuthenticated && (!inApp || !inTripModal)) {
+        setTimeout(() => {
+          router.replace("home");
+        }, 300);
+      } else if (isAuthenticated === false && (!inNotification || !inAuth)) {
+        setTimeout(() => {
+          router.replace("welcome");
+        }, 300);
+      }
+    } catch (error) {
+      console.log(`Error in isAuthenticated check: `, error);
     }
   }, [isAuthenticated]);
 
@@ -50,14 +57,9 @@ export default function RootLayout() {
               name="(notificationScreen)"
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="welcome" options={{ headerShown: false }} />
-            <Stack.Screen name="signIn" options={{ headerShown: false }} />
-            <Stack.Screen name="signUp" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="restorePassword"
-              options={{ headerShown: false }}
-            />
+
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen
               name="(tripsModal)"
               options={{ headerShown: false, presentation: "modal" }}

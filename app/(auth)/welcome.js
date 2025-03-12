@@ -10,7 +10,7 @@ import {
 } from "react-native-responsive-screen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { UsePreventBack } from "../hooks/usePreventBack";
+import { UsePreventBack } from "../../hooks/usePreventBack";
 
 export default function HomeScreen() {
   UsePreventBack();
@@ -28,7 +28,7 @@ export default function HomeScreen() {
       >
         <LottieView
           style={{ flex: 1 }}
-          source={require("../assets/images/welcome2.json")}
+          source={require("../../assets/images/welcome2.json")}
           autoPlay
           loop
           speed={0.6}

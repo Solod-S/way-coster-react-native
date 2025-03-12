@@ -6,11 +6,11 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BackButton, CustomKeyboardView, Loading } from "../components";
+import { BackButton, CustomKeyboardView, Loading } from "../../components";
 import { Image } from "expo-image";
 import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
-import { resetPassword, setIsStatus } from "../redux/slices/authSlice";
+import { resetPassword, setIsStatus } from "../../redux/slices/authSlice";
 import { useRouter } from "expo-router";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 
@@ -78,7 +78,7 @@ export default function RestorePassword() {
             >
               <Image
                 style={{ width: wp(72), height: wp(72) }}
-                source={require("../assets/images/restorePassword.svg")}
+                source={require("../../assets/images/restorePassword.svg")}
               />
             </Animated.View>
 
