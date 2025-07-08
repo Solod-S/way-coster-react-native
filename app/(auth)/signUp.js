@@ -51,7 +51,7 @@ export default function SignUp() {
       return;
     }
 
-    dispatch(registerUser({ email, password, fullName: name }));
+    dispatch(registerUser({ email: email.trim(), password, fullName: name }));
   };
 
   useEffect(() => {
@@ -132,12 +132,12 @@ export default function SignUp() {
                 >
                   Password
                 </Text>
-                <View className="flex-row items-center bg-white rounded-full px-2 py-1 mb-3">
+                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
                   <TextInput
                     secureTextEntry={!showPassword}
                     value={password}
                     onChangeText={setPassword}
-                    style={{ flex: 1 }}
+                    className="flex-1 p-0"
                   />
                   <TouchableOpacity
                     onPress={() => setShowPassword(!showPassword)}
@@ -160,12 +160,12 @@ export default function SignUp() {
                 >
                   Confirm Password
                 </Text>
-                <View className="flex-row items-center bg-white rounded-full px-2 py-1 mb-3">
+                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
                   <TextInput
                     secureTextEntry={!showConfirmPassword}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
-                    style={{ flex: 1 }}
+                    className="flex-1 p-0"
                   />
                   <TouchableOpacity
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}

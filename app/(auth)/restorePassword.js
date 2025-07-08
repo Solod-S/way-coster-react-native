@@ -33,7 +33,7 @@ export default function RestorePassword() {
         });
         return;
       }
-      dispatch(resetPassword({ email }));
+      dispatch(resetPassword({ email: email.trim() }));
     } catch (error) {
       Toast.show({
         type: "error",
@@ -57,76 +57,74 @@ export default function RestorePassword() {
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1">
-      <CustomKeyboardView>
-        <StatusBar style="dark" />
-        <View className="mx-4 pb-6 flex-1">
-          <View>
-            <View className="relative">
-              <View className="absolute top-0 left-0 z-10">
-                <BackButton />
-              </View>
-              <Text
-                style={{ fontSize: hp(3) }}
-                className="font-bold text-center text-gray-600"
-              >
-                Restore Password
-              </Text>
+      <StatusBar style="dark" />
+      <View className="mx-4 pb-6 flex-1">
+        <View>
+          <View className="relative">
+            <View className="absolute top-0 left-0 z-10">
+              <BackButton />
             </View>
-            <Animated.View
-              entering={FadeInDown.delay(100).springify()}
-              className="flex-row justify-center my-3 mt-5"
+            <Text
+              style={{ fontSize: hp(3) }}
+              className="font-bold text-center text-gray-600"
             >
-              <Image
-                style={{ width: wp(72), height: wp(72) }}
-                source={require("../../assets/images/restorePassword.svg")}
-              />
-            </Animated.View>
+              Restore Password
+            </Text>
+          </View>
+          <Animated.View
+            entering={FadeInDown.delay(100).springify()}
+            className="flex-row justify-center my-3 mt-5"
+          >
+            <Image
+              style={{ width: wp(72), height: wp(72) }}
+              source={require("../../assets/images/restorePassword.svg")}
+            />
+          </Animated.View>
 
-            <Animated.View
-              entering={FadeInDown.delay(200).springify()}
-              className="mx-4 gap-2"
+          <Animated.View
+            entering={FadeInDown.delay(200).springify()}
+            className="mx-4 gap-2"
+          >
+            <Text
+              style={{ fontSize: hp(2) }}
+              className="font-bold text-gray-600"
             >
-              <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-gray-600"
-              >
-                Email
-              </Text>
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                className="bg-white rounded-full p-4 mb-3"
-              />
-            </Animated.View>
-          </View>
-
-          <View className="mt-4">
-            {isLoading ? (
-              <View
-                style={{ height: hp(7), width: wp(80) }}
-                className="w-full shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-              >
-                <Loading color="white" size={hp(3)} />
-              </View>
-            ) : (
-              <Animated.View entering={FadeInDown.delay(300).springify()}>
-                <TouchableOpacity
-                  onPress={handleLogin}
-                  style={{ height: hp(7), width: wp(80) }}
-                  className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
-                >
-                  <Text
-                    style={{ fontSize: hp(3) }}
-                    className="text-white font-bold tracking-widest"
-                  >
-                    Restore
-                  </Text>
-                </TouchableOpacity>
-              </Animated.View>
-            )}
-          </View>
+              Email
+            </Text>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              className="bg-white rounded-full p-4 mb-3"
+            />
+          </Animated.View>
         </View>
-      </CustomKeyboardView>
+
+        <View className="mt-4">
+          {isLoading ? (
+            <View
+              style={{ height: hp(7), width: wp(80) }}
+              className="w-full shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
+            >
+              <Loading color="white" size={hp(3)} />
+            </View>
+          ) : (
+            <Animated.View entering={FadeInDown.delay(300).springify()}>
+              <TouchableOpacity
+                onPress={handleLogin}
+                style={{ height: hp(7), width: wp(80) }}
+                className="shadow-sm bg-red-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200 mb-4"
+              >
+                <Text
+                  style={{ fontSize: hp(3) }}
+                  className="text-white font-bold tracking-widest"
+                >
+                  Restore
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
+          )}
+        </View>
+      </View>
     </SafeAreaView>
   );
 }

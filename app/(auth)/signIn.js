@@ -37,7 +37,7 @@ export default function SignIn() {
         });
         return;
       }
-      dispatch(loginUser({ email, password }));
+      dispatch(loginUser({ email: email.trim(), password }));
     } catch (error) {
       Toast.show({
         type: "error",
@@ -104,12 +104,12 @@ export default function SignIn() {
                 >
                   Password
                 </Text>
-                <View className="flex-row items-center bg-white rounded-full px-2 py-1 mb-3">
+                <View className="flex-row items-center bg-white rounded-full p-4 mb-3">
                   <TextInput
                     secureTextEntry={!showPassword}
                     value={password}
                     onChangeText={setPassword}
-                    className="flex-1"
+                    className="flex-1 p-0"
                   />
                   <TouchableOpacity
                     onPress={() => setShowPassword(!showPassword)}

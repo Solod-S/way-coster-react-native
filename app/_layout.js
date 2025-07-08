@@ -28,15 +28,10 @@ const MainLayout = ({ children }) => {
       const inTripModal = segments[0] === "(tripsModal)";
       const inNotification = segments[0] === "(notificationScreen)";
       const inAuth = segments[0] === "(auth)";
-      // const inNotificationScreen = segments[0] === "(notificationScreen)";
       if (isAuthenticated && (!inApp || !inTripModal)) {
-        setTimeout(() => {
-          router.replace("home");
-        }, 300);
+        router.replace("home");
       } else if (isAuthenticated === false && (!inNotification || !inAuth)) {
-        setTimeout(() => {
-          router.replace("welcome");
-        }, 300);
+        router.replace("welcome");
       }
     } catch (error) {
       console.log(`Error in isAuthenticated check: `, error);

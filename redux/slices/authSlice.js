@@ -173,6 +173,7 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
   try {
     await signOut(auth);
+    return;
   } catch (error) {
     console.log(`Error in logoutUser:`, error);
     const msg = error.message || "An error occurred";
@@ -285,6 +286,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
+        state.user = null;
         state.status = "failed";
         state.error = action.payload;
       })

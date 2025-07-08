@@ -18,13 +18,19 @@ import { Colors } from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../../redux/slices/authSlice";
+import {
+  logoutUser,
+  setIsAuthenticated,
+  setUser,
+} from "../../redux/slices/authSlice";
 import { UsePreventBack } from "../../hooks/usePreventBack";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { isLoading, user } = useSelector(state => state.auth);
+  const { isLoading } = useSelector(state => state.auth);
   UsePreventBack();
 
   const handleLogout = () => {
@@ -40,6 +46,9 @@ export default function HomeScreen() {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage);
+            dispatch(setUser(null));
+            dispatch(setIsAuthenticated(false));
+            router.replace("welcome");
           }
         },
       },

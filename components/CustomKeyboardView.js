@@ -10,6 +10,7 @@ export function CustomKeyboardView({ children, inChat }) {
     kavConfig = { keyboardVerticalOffset: 90 };
     scrollViewConfig = { contentContainerStyle: { flex: 1 } };
   }
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
