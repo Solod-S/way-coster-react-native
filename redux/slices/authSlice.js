@@ -20,7 +20,7 @@ export const registerUser = createAsyncThunk(
       const response = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const { user } = response;
 
@@ -71,10 +71,10 @@ export const registerUser = createAsyncThunk(
           .replace("FirebaseError: ", "")
           .replace("Firebase: ", "")
           .replace("auth/", "")
-          .replace(/-/g, " ")
+          .replace(/-/g, " "),
       );
     }
-  }
+  },
 );
 
 // Password reset
@@ -115,10 +115,10 @@ export const resetPassword = createAsyncThunk(
           .replace("FirebaseError: ", "")
           .replace("Firebase: ", "")
           .replace("auth/", "")
-          .replace(/-/g, " ")
+          .replace(/-/g, " "),
       );
     }
-  }
+  },
 );
 
 // User authorization
@@ -163,10 +163,10 @@ export const loginUser = createAsyncThunk(
           .replace("FirebaseError: ", "")
           .replace("Firebase: ", "")
           .replace("auth/", "")
-          .replace(/-/g, " ")
+          .replace(/-/g, " "),
       );
     }
-  }
+  },
 );
 
 // User logout
@@ -209,9 +209,9 @@ export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
 //   });
 // };
 
-export const initAuthListener = () => dispatch => {
+export const initAuthListener = () => (dispatch) => {
   dispatch(setIsAuthenticated(undefined)); // Пока не определено
-  return onAuthStateChanged(auth, async user => {
+  return onAuthStateChanged(auth, async (user) => {
     try {
       console.log(`user`, user?.displayName);
       if (user && user?.emailVerified) {
@@ -250,7 +250,7 @@ export const fetchUserData = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
@@ -273,9 +273,9 @@ const authSlice = createSlice({
       state.status = action.payload;
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, state => {
+      .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
@@ -290,19 +290,19 @@ const authSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(logoutUser.pending, state => {
+      .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;
         state.user = null;
         state.isAuthenticated = false;
         state.status = "idle";
       })
-      .addCase(logoutUser.fulfilled, state => {
+      .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
       })
-      .addCase(registerUser.pending, state => {
+      .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
@@ -313,10 +313,10 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.status = "idle";
       })
-      .addCase(resetPassword.pending, state => {
+      .addCase(resetPassword.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(resetPassword.fulfilled, state => {
+      .addCase(resetPassword.fulfilled, (state) => {
         state.isLoading = false;
         state.status = "succeeded";
       })

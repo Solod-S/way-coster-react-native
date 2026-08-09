@@ -26,7 +26,7 @@ export function RecentExpensesList({ item }) {
   const [isLoading, setIsLoading] = useState(true);
   const [lastDoc, setLastDoc] = useState(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const { user } = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   const fetchExpenses = async (reset = false) => {
     if (!user?.uid) return;
@@ -43,14 +43,14 @@ export function RecentExpensesList({ item }) {
         expenses: newExpenses,
         lastDoc: newLastDoc,
       } = await expensesFirebaseServices.getExpenses(
-        user.uid,
-        item.id,
-        reset ? null : lastDoc
+        user?.uid,
+        item?.id,
+        reset ? null : lastDoc,
       );
 
       if (success) {
-        setExpenses(prevExpenses =>
-          reset ? newExpenses : [...prevExpenses, ...newExpenses]
+        setExpenses((prevExpenses) =>
+          reset ? newExpenses : [...prevExpenses, ...newExpenses],
         );
         setLastDoc(newLastDoc);
       }
@@ -62,7 +62,7 @@ export function RecentExpensesList({ item }) {
     }
   };
 
-  const handleDelete = expenseId => {
+  const handleDelete = (expenseId) => {
     Vibration.vibrate(200);
     Alert.alert(
       "Delete expense?",
@@ -73,16 +73,16 @@ export function RecentExpensesList({ item }) {
           text: "Delete",
           onPress: () => deleteExpense(expenseId),
         },
-      ]
+      ],
     );
   };
 
-  const deleteExpense = async expenseId => {
+  const deleteExpense = async (expenseId) => {
     try {
       const { success } = await expensesFirebaseServices.deleteExpense(
-        user.uid,
-        item.id,
-        expenseId
+        user?.uid,
+        item?.id,
+        expenseId,
       );
       if (success) fetchExpenses(true);
     } catch (error) {
@@ -94,7 +94,7 @@ export function RecentExpensesList({ item }) {
     useCallback(() => {
       fetchExpenses(true);
       return () => {};
-    }, [])
+    }, []),
   );
 
   return (
@@ -128,7 +128,7 @@ export function RecentExpensesList({ item }) {
               ListEmptyComponent={
                 <EmptyList message={"No expenses recorded yet."} />
               }
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
               showsVerticalScrollIndicator={false}
               onEndReached={() => {
                 if (!isFetchingMore && lastDoc) {
