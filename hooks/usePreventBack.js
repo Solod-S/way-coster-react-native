@@ -1,6 +1,5 @@
-import { useFocusEffect } from "@react-navigation/native";
 import { BackHandler } from "react-native";
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 
 export const UsePreventBack = () => {
   const navigation = useNavigation();

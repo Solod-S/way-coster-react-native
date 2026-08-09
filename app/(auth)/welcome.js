@@ -9,7 +9,6 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
 import { UsePreventBack } from "../../hooks/usePreventBack";
 
 export default function HomeScreen() {
@@ -17,21 +16,24 @@ export default function HomeScreen() {
   const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 justify-between pb-2 items-center">
+    <SafeAreaView className="flex-1  pb-2 items-center">
       <StatusBar style="dark" />
       <Animated.View
         entering={FadeInDown.delay(100).springify()}
+        className="flex-row justify-center my-3 mt-5 "
         style={{
           height: wp(100),
           aspectRatio: 1,
         }}
       >
-        <LottieView
-          style={{ flex: 1 }}
-          source={require("../../assets/images/welcome2.json")}
-          autoPlay
-          loop
-          speed={0.6}
+        <Image
+          style={{
+            width: wp(72),
+            height: wp(72),
+            borderRadius: wp(36),
+            opacity: 0.8,
+          }}
+          source={require("../../assets/images/start.jpg")}
         />
       </Animated.View>
 

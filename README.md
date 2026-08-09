@@ -129,3 +129,13 @@ npm start
 Contributions are welcome! If you have any suggestions or improvements, please create a pull request. For major changes, please open an issue first to discuss the changes.
 
 **_NOTE: PLEASE LET ME KNOW IF YOU DISCOVERED ANY BUG OR YOU HAVE ANY SUGGESTIONS_**
+
+<!--
+Команда для сборки
+
+eas build --platform android --profile production
+
+npx eas-cli whoami — кто залогинен сейчас (см. выше)
+npx eas-cli logout — выйти
+npx eas-cli login — залогиниться под другим
+-->
